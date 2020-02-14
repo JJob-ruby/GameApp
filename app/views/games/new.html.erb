@@ -1,0 +1,19 @@
+<div id="top" >
+</div>
+<div align="center">
+<%= form_with scope: :game, model: @game , id: :main_form, local: true do |f| %>
+  <br> <br> <br> <br> 
+  <h2> <%= f.label :CREATE_NEW_GAME %> </h2>
+  <%= f.label :name %>
+  <%= f.text_area :name %>
+
+  <%= f.label :Number_Of_Players %>
+  <%= f.text_area :number_of_players, {"border-radius"=>"8px 1pt solid"} %>
+
+  <br>
+
+  <%= f.submit :submit %>
+
+
+<% end %>
+</div>

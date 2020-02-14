@@ -1,0 +1,24 @@
+
+
+
+
+<%= form_with model: @match, method: :post do |f|%>
+
+	<%= f.label "Enter User Scores" %>
+
+	<%= f.submit "Submit" %>
+	
+	<p>
+		<% @users.each do |user| %>
+			
+			
+
+				
+				<%= user.email %> 
+																
+
+
+		<% end %>
+	</p>
+
+<% end %>

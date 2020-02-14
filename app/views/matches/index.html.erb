@@ -1,0 +1,22 @@
+
+
+<table>
+	<thead>
+		<tr>													
+			<th> Match Name </th>
+			<th> Game </th>
+		</tr>
+	</thead>
+
+	<tbody>
+		<% @matches.each do |match| %>
+			<tr>
+				<td> <%= link_to match.name, match %></td>
+				<td> <%= match.game.name %></td>
+			</tr>
+		<% end %>	
+	</tbody>
+
+</table>
+
+

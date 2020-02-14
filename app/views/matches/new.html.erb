@@ -1,0 +1,93 @@
+
+
+<input type="hidden" id="refreshed" value="no">
+
+<%#= f.select "game", @games.collect{|g| [g.name, g.to_json.html_safe]}, include_blank: 'select one', required: true %>
+<%= form_with scope: :match, model: @match, method: :post, id: :form, local: true do |f| %>
+
+<%= f.label :select_game %>
+<%= f.select "game", @games.collect{|g| [g.name, g.to_json.html_safe]}, include_blank: 'select one', required: true %>
+
+<p>
+<%= f.label :Match_Description %><br>
+<%= f.text_area :name %>
+</p><br>
+
+<p>
+<%= f.submit :submit, id: :submit %>
+</p>
+
+<% end %>
+
+<script>
+
+  function myfunc()
+  {
+		console.log("inside my function");
+    var val = ele.options[ele.selectedIndex].value;
+		console.log(val)
+
+		var game_params_json = JSON.parse(val);
+		var number_of_players= game_params_json.number_of_players
+
+		removeElementsByClass("select_user");
+        
+    for(var i=0; i < number_of_players; i++){
+		createSelect(val, i)
+		}
+
+  }
+
+  function createSelect(val, i)
+  {
+
+  	var sub= document.getElementById("submit");
+		var fo= document.getElementById("form");
+		var sel=document.createElement("SELECT");
+
+		var par=document.createElement("P");
+
+		//	sel.id = "game_"+ i.toString();
+		sel.required = true;
+		sel.name = "user["+i.toString() +"]"
+
+		var usr= <%= @us.to_json.html_safe %>;
+    var uid= <%= @uid.to_json.html_safe %>;
+
+		for(var i = 0; i < usr.length; i++) {
+    	var opt = usr[i];
+    	var el = document.createElement("option");
+    	el.textContent = opt;
+    	el.value = uid[i];
+    	sel.appendChild(el);
+		}
+
+		sel.selectedIndex = -1;
+		par.appendChild(sel);
+		par.classList.add("select_user");	
+		sub.parentNode.insertBefore(par,sub);
+
+	}
+
+	function removeElementsByClass(className){
+	var elements = document.getElementsByClassName(className);
+  while(elements.length > 0){
+  	elements[0].parentNode.removeChild(elements[0]);
+  }
+	}
+
+	
+	
+  console.log("hello");
+  console.log("I guess I am working");
+  var ele= document.getElementById("match_game");
+  ele.selectedIndex=-1;
+  ele.required = true;	
+  ele.addEventListener("change", myfunc, false);
+  
+</script>
+
+
+
+
+

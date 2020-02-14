@@ -1,0 +1,25 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Match Users</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @match_users.each do |match_user| %>
+      <tr>
+        <td><%= link_to 'Show', match_user %></td>
+        <td><%= link_to 'Edit', edit_match_user_path(match_user) %></td>
+        <td><%= link_to 'Destroy', match_user, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Match User', new_match_user_path %>

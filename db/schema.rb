@@ -10,10 +10,44 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_02_05_110843) do
+ActiveRecord::Schema.define(version: 2020_02_11_105908) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "games", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.integer "number_of_players", null: false
+  end
+
+  create_table "match_users", force: :cascade do |t|
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.bigint "match_id"
+    t.bigint "user_id"
+    t.index ["match_id", "user_id"], name: "index_match_users_on_match_id_and_user_id", unique: true
+    t.index ["match_id"], name: "index_match_users_on_match_id"
+    t.index ["user_id"], name: "index_match_users_on_user_id"
+  end
+
+  create_table "matches", force: :cascade do |t|
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.bigint "game_id"
+    t.string "name", null: false
+    t.index ["game_id"], name: "index_matches_on_game_id"
+  end
+
+  create_table "scores", force: :cascade do |t|
+    t.integer "score"
+    t.integer "round"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.bigint "match_user_id"
+    t.index ["match_user_id"], name: "index_scores_on_match_user_id"
+  end
 
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
@@ -27,4 +61,8 @@ ActiveRecord::Schema.define(version: 2020_02_05_110843) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "match_users", "matches"
+  add_foreign_key "match_users", "users"
+  add_foreign_key "matches", "games"
+  add_foreign_key "scores", "match_users"
 end
