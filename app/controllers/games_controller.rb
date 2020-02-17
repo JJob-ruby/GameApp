@@ -7,6 +7,7 @@ class GamesController < ApplicationController
   end
 
   def index
+    p "asdasd"
     @games=Game.all
   end
  
