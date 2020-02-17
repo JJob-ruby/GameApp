@@ -1,5 +1,5 @@
 class ScoresController < ApplicationController
-  before_action :set_score, only: [:show, :edit, :update, :destroy]
+#  before_action :set_score, only: [:show, :edit, :update, :destroy]
 
   # GET /scores
   # GET /scores.json
@@ -15,6 +15,8 @@ class ScoresController < ApplicationController
   # GET /scores/new
   def new
     @score = Score.new
+		Score.find_by match_id: 'Spartacus', rating: 4
+
   end
 
   # GET /scores/1/edit
@@ -24,18 +26,40 @@ class ScoresController < ApplicationController
   # POST /scores
   # POST /scores.json
   def create
-    @score = Score.new(score_params)
+    
+		print "I guess we are here"	
 
-    respond_to do |format|
-      if @score.save
-        format.html { redirect_to @score, notice: 'Score was successfully created.' }
-        format.json { render :show, status: :created, location: @score }
-      else
-        format.html { render :new }
-        format.json { render json: @score.errors, status: :unprocessable_entity }
-      end
-    end
-  end
+		scores = score_params
+		@round  = params["round"]
+		match_id= params["match_id"]
+
+		@scoreArray=[]		
+	
+		ActiveRecord::Base.transaction do
+			
+			scores.each do |u_id, sc|
+
+				print "match id is #{match_id} user id is #{u_id}"
+				@mu=MatchUser.find_by! match_id: match_id, user_id: u_id				
+				
+				if Score.exists? match_user_id: @mu.id, round: @round
+					@score= Score.find_by! match_user_id: @mu.id, round: @round
+					@score.update!( score: sc)
+	
+				else
+					@score=Score.new(match_user_id: @mu.id, score: sc, round: @round)
+					if @score.save!
+					
+					else
+						
+					end
+				end
+			end
+		end
+		redirect_to edit_match_path(params["match_id"])
+	end
+					
+
 
   # PATCH/PUT /scores/1
   # PATCH/PUT /scores/1.json
@@ -69,6 +93,6 @@ class ScoresController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def score_params
-      params.fetch(:score, {})
+      params.require(:score)
     end
 end

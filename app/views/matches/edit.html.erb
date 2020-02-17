@@ -1,0 +1,96 @@
+
+
+
+<table>
+	<thead>
+		<th>  Round </th> 
+		<% @users.each do |user| %>
+			<th> <%= user.name %>  </th>
+		<% end %>
+	</thead>
+	<tbody id="tab">
+
+	<% if MatchUser.exists? match_id: params[:id] %>
+		<% mu=MatchUser.find_by(match_id: params[:id]) %>
+		<% sc=mu.scores %>
+		<%# @rounds=sc.select(:round).distinct %>
+		
+		<% @rounds=sc.distinct.pluck(:round) %>		
+		
+		<% @rounds.each do |round| %>
+			
+			<tr> <td> <%= round %> </td> 			
+		
+			<% @users.each do |user| %>
+				<%	mu=MatchUser.find_by(match_id: params[:id], user_id: user.id) %>
+				<%	mu_score= mu.scores.find_by(match_user_id: mu.id, round: round).score %>
+				<% print " \n mu_score is #{mu_score} \n" %>
+
+				<td> <%= mu_score %> </td>
+
+			<% end %>
+			</tr>
+		<% end %>
+	<% end %>
+	
+	</tbody>
+</table>
+
+	<%#= f.select "round", l_num.collect{|l| [ l , {round: l, match: @match.id}.to_json.html_safe ]}, include_blank: true, selected: true %>
+
+
+<%= form_with url: scores_path, method: :post, id: :main_form do |f|%>
+
+	<%= f.label "Enter User Scores" %>
+	
+	<%= f.hidden_field :match_id, value: @match.id %>
+
+	<%= f.submit "Submit", remote: true, data: { disable_with: false } %>
+
+	<% l_num=[1,2,3,4,5,6,7,8,9,10] %>
+
+	<%= f.select "round", l_num.collect{|l| [ l , l ]}, { :include_blank => '-- Select One --' }, :required => true %>
+	<p>
+		<% @users.each do |user| %>
+			<p>
+				<label for="main_form"><%= user.name %></label> 
+				<% for i in 1..3 do %>
+					<button type="button" value=<%= {mod: 5*(4-i), user: user.id}.to_json.html_safe %> onClick="value_button(this.value)" > <%= 5*(4-i) %> </button>
+				<% end %>
+
+				<input type="text" name="score[<%= user.id %>]" id="<%= user.id %>" class="inputs" value="0"> </input>
+				
+				<% for i in 1..3 do %>
+					<button type="button" value=<%= {mod: -5*i, user: user.id}.to_json.html_safe %> onClick="value_button(this.value)" > <%= -5*i %> </button>
+				<% end %>			
+			</p>
+			
+		<% end %>
+	</p>
+  
+	<script>
+
+  populate();	
+
+	function value_button(val)
+	{
+		
+		console.log(5);
+		var json_val=JSON.parse(val);
+		var val= json_val["mod"];
+		var user=json_val["user"];
+
+		var ele=document.getElementById(user);
+		
+		ele.value = parseInt(ele.value) + parseInt(val);
+
+	}
+
+	function populate()
+	{
+	
+	}
+	
+	</script>
+
+<% end %>

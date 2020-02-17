@@ -2,23 +2,39 @@
 
 
 
-<%= form_with model: @match, method: :post do |f|%>
 
-	<%= f.label "Enter User Scores" %>
-
-	<%= f.submit "Submit" %>
-	
-	<p>
+<table>
+	<thead>
+		<th>  Round </th> 
 		<% @users.each do |user| %>
-			
-			
-
-				
-				<%= user.email %> 
-																
-
-
+			<th> <%= user.name %>  </th>
 		<% end %>
-	</p>
+	</thead>
+	<tbody id="tab">
 
-<% end %>
+	<% if MatchUser.exists? match_id: params[:id] %>
+		<% mu=MatchUser.find_by(match_id: params[:id]) %>
+		<% sc=mu.scores %>
+		<%# @rounds=sc.select(:round).distinct %>
+		
+		<% @rounds=sc.distinct.pluck(:round) %>		
+		
+		<% @rounds.each do |round| %>
+			
+			<tr> <td> <%= round %> </td> 			
+		
+			<% @users.each do |user| %>
+				<%	mu=MatchUser.find_by(match_id: params[:id], user_id: user.id) %>
+				<%	mu_score= mu.scores.find_by(match_user_id: mu.id, round: round).score %>
+				<% print " \n mu_score is #{mu_score} \n" %>
+
+				<td> <%= mu_score %> </td>
+
+			<% end %>
+			</tr>
+		<% end %>
+	<% end %>
+	
+	</tbody>
+</table>
+

@@ -2,11 +2,13 @@
 
 class MatchesController < ApplicationController
 
+	before_action :authenticate_user!, except: [:index, :show]
+
   def new
     @match=Match.new
     @games=Game.select([:name, :number_of_players, :id])
     @users=User.all
-    @us= @users.collect {|u| u.email}
+    @us= @users.collect {|u| u.name}
     @uid= @users.collect {|u| u.id}
 	
     print @games
@@ -18,6 +20,7 @@ class MatchesController < ApplicationController
  
   def show
   
+		print "Match id is #{params[:id]}"
     @match= Match.find(params[:id])
     @users= @match.users
 		print "Users are #{@users} "
@@ -76,7 +79,28 @@ class MatchesController < ApplicationController
 		end
   end
   
-  def update
+  def edit	
+
+		print "Match id is #{params[:id]}"
+    @match= Match.find(params[:id].to_i)
+    @users= @match.users
+		print "Users are #{@users} "
+
+'''
+		if MatchUser.exists? match_id: params[:id]
+			mu=MatchUser.find_by(match_id: params[:id])
+			sc=mu.scores
+			@rounds=sc.select(:round).distinct
+
+			@rounds.each do |round|
+				@users.each do |user|
+					mu=MatchUser.find_by(match_id: params[:id], user_id: user.id)
+					mu_score= mu.scores.find_by(match_user_id: mu.id).score
+					print " \n mu_score is #{mu_score} \n"
+				end
+			end
+		end
+'''
   end
 
   def destroy
