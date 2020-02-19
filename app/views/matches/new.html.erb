@@ -1,23 +1,31 @@
 
+<div align="center" class="col-sm-4">
 
-<input type="hidden" id="refreshed" value="no">
+	<input type="hidden" id="refreshed" value="no">
 
-<%#= f.select "game", @games.collect{|g| [g.name, g.to_json.html_safe]}, include_blank: 'select one', required: true %>
-<%= form_with scope: :match, model: @match, method: :post, id: :form, local: true do |f| %>
+	<%#= f.select "game", @games.collect{|g| [g.name, g.to_json.html_safe]}, include_blank: 'select one', required: true %>
+	<%= form_with scope: :match, model: @match, method: :post, id: :form, local: true do |f| %>
 
-<%= f.label :select_game %>
-<%= f.select "game", @games.collect{|g| [g.name, g.to_json.html_safe]}, include_blank: 'select one', required: true %>
+	<div class="form-group">
+		<div>
+			<%= f.label :select_game %>
+		</div>
+		<%= f.select "game", @games.collect{|g| [g.name, g.to_json.html_safe]},{}, {include_blank: 'select one',class: "form-control", required: true} %>
+	</div>
 
-<p>
-<%= f.label :Match_Description %><br>
-<%= f.text_area :name %>
-</p><br>
 
-<p>
-<%= f.submit :submit, id: :submit %>
-</p>
+	<div class="form-group">
+		<%= f.label :Match_Description %><br>
+		<%= f.text_area :name, {class: "form-control"} %>
+	</div>
 
-<% end %>
+	<div class="form-group">
+		<%= f.submit :submit, id: :submit %>
+	</div>
+
+	<% end %>
+
+</div>
 
 <script>
 
@@ -61,7 +69,7 @@
     	el.value = uid[i];
     	sel.appendChild(el);
 		}
-
+		sel.classList.add("form-control");
 		sel.selectedIndex = -1;
 		par.appendChild(sel);
 		par.classList.add("select_user");	
@@ -72,7 +80,7 @@
 	function removeElementsByClass(className){
 	var elements = document.getElementsByClassName(className);
   while(elements.length > 0){
-  	elements[0].parentNode.removeChild(elements[0]);
+  elements[0].parentNode.removeChild(elements[0]);
   }
 	}
 

@@ -1,6 +1,6 @@
 
 
-<table>
+<table class="table">
 	<thead>
 		<tr>													
 			<th> Match Name </th>
@@ -12,8 +12,8 @@
 	<tbody>
 		<% @matches.each do |match| %>
 			<tr>
-				<td> <%= link_to match.name, match %></td>
-				<td> <%= match.game.name %></td>
+				<td> <%= link_to match.name, match, class: "button btn btn-default" %></td>
+				<td> <h6> <%= link_to match.game.name, nil, class: "button btn btn-default" %> </h6> </td>
 				<td> <%= link_to "Edit", edit_match_path(match.id) %> </td>
 			</tr>
 		<% end %>	
